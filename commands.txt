@@ -1,0 +1,26 @@
+# to intialise backend package.json 
+npm init -y
+
+# download the required dependencies 
+npm install express mongoose dotenv cors bcryptjs jsonwebtoken multer cloudinary morgan helmet express-rate-limit validator slugify
+
+# to install nodemon
+npm install -D nodemon
+
+# to install axios 
+npm install axios
+
+# Dependency needed for upload controller
+npm install streamifier
+npm install joi axios
+
+# for frontnend
+npm create vite@latest frontend -- --template react
+cd frontend
+npm install
+npm install axios react-router-dom lucide-react
+npm install -D tailwindcss postcss autoprefixer
+npm install recharts
+
+# for certificate-services
+python -m venv venv

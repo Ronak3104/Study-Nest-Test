@@ -1,0 +1,10 @@
+const Checkbox = ({ label, ...props }) => {
+  return (
+    <label className="flex items-center gap-3 text-sm text-slate-700">
+      <input type="checkbox" className="h-4 w-4 rounded border-slate-300" {...props} />
+      <span>{label}</span>
+    </label>
+  );
+};
+
+export default Checkbox;
