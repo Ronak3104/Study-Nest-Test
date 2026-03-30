@@ -1,19 +1,9 @@
-const express = require('express');
-const { uploadFile } = require('../controllers/upload.controller');
-
-const { protect } = require('../middlewares/auth.middleware');
-const allowRoles = require('../middlewares/role.middleware');
-const upload = require('../middlewares/upload.middleware');
-
+const express = require("express");
 const router = express.Router();
+const upload = require("../middlewares/upload.middleware");
+const { uploadFile } = require("../controllers/upload.controller");
+const auth = require("../middlewares/auth.middleware");
 
-// Use for PDFs/images uploads to Cloudinary
-router.post(
-  '/',
-  protect,
-  allowRoles('student', 'instructor', 'admin'),
-  upload.single('file'),
-  uploadFile
-);
+router.post("/", auth, upload.single("file"), uploadFile);
 
 module.exports = router;

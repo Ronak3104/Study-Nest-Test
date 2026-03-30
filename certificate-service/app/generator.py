@@ -1,103 +1,72 @@
-import os
-from flask import Flask, request, jsonify, send_from_directory
+from fastapi import FastAPI, HTTPException
+from fastapi.responses import JSONResponse
+from pydantic import BaseModel
 from dotenv import load_dotenv
-import cloudinary
-import cloudinary.uploader
+import os
+import asyncio
 
-from certificate_drawer import generate_certificate_pdf
-from utils.formatters import (
-    format_student_name,
-    format_course_title,
-    format_completion_date
-)
-from utils.file_utils import (
-    ensure_directories,
-    generate_filename,
-    get_certificate_output_path,
-    CERTIFICATES_DIR
-)
+from .certificate_drawer import draw_certificate
+from .utils.file_utils import cleanup_temp
+from cloudinary import uploader, config as cloudinary_config
 
 load_dotenv()
 
-app = Flask(__name__)
-
-PORT = int(os.getenv("PORT", 8000))
-DEBUG = os.getenv("DEBUG", "True").lower() == "true"
-UPLOAD_TO_CLOUDINARY = os.getenv("UPLOAD_TO_CLOUDINARY", "False").lower() == "true"
-BASE_URL = os.getenv("BASE_URL", f"http://localhost:{PORT}")
-
-cloudinary.config(
+# Cloudinary setup
+cloudinary_config(
     cloud_name=os.getenv("CLOUDINARY_CLOUD_NAME"),
     api_key=os.getenv("CLOUDINARY_API_KEY"),
-    api_secret=os.getenv("CLOUDINARY_API_SECRET")
+    api_secret=os.getenv("CLOUDINARY_API_SECRET"),
 )
 
-ensure_directories()
+app = FastAPI(title="StudyNest Certificate Service")
 
 
-@app.route("/health", methods=["GET"])
-def health_check():
-    return jsonify({
-        "success": True,
-        "message": "Certificate service is running"
-    }), 200
+class CertificatePayload(BaseModel):
+    studentName: str
+    courseName: str
+    duration: str = "8 weeks"
+    issueDate: str
+    certificateId: str
 
 
-@app.route("/files/<filename>", methods=["GET"])
-def serve_certificate_file(filename):
-    return send_from_directory(CERTIFICATES_DIR, filename)
-
-
-@app.route("/generate", methods=["POST"])
-def generate_certificate():
+@app.post("/generate-certificate")
+async def generate_certificate(payload: CertificatePayload):
     try:
-        data = request.get_json()
+        output_dir = "app/output/certificates"
+        os.makedirs(output_dir, exist_ok=True)
+        pdf_path = f"{output_dir}/{payload.certificateId}.pdf"
 
-        student_name = format_student_name(data.get("studentName"))
-        course_title = format_course_title(data.get("courseTitle"))
-        completion_date = format_completion_date(data.get("completionDate"))
-        certificate_number = data.get("certificateNumber", "SN-UNKNOWN")
-        institution = data.get("institution", "StudyNest Learning Platform")
-
-        filename = generate_filename(prefix="certificate", extension="pdf")
-        output_path = get_certificate_output_path(filename)
-
-        generate_certificate_pdf(
-            output_path=output_path,
-            student_name=student_name,
-            course_title=course_title,
-            completion_date=completion_date,
-            certificate_number=certificate_number,
-            institution=institution
+        # Generate PDF
+        draw_certificate(
+            pdf_path=pdf_path,
+            student_name=payload.studentName,
+            course_name=payload.courseName,
+            duration=payload.duration,
+            issue_date=payload.issueDate,
+            certificate_id=payload.certificateId,
         )
 
-        file_url = f"{BASE_URL}/files/{filename}"
-        cloudinary_url = None
+        # Upload to Cloudinary
+        result = uploader.upload(
+            pdf_path,
+            folder="studynest/certificates",
+            resource_type="raw",
+            public_id=payload.certificateId,
+            overwrite=True,
+        )
 
-        if UPLOAD_TO_CLOUDINARY:
-            upload_result = cloudinary.uploader.upload(
-                output_path,
-                resource_type="raw",
-                folder="studynest/certificates",
-                public_id=filename.replace(".pdf", "")
-            )
-            cloudinary_url = upload_result.get("secure_url")
+        cleanup_temp(pdf_path)
 
-        return jsonify({
+        return JSONResponse({
             "success": True,
-            "message": "Certificate generated successfully",
-            "filename": filename,
-            "localPath": output_path,
-            "url": cloudinary_url if cloudinary_url else file_url
-        }), 200
+            "url": result["secure_url"],
+            "certificateId": payload.certificateId
+        })
 
-    except Exception as error:
-        return jsonify({
-            "success": False,
-            "message": "Failed to generate certificate",
-            "error": str(error)
-        }), 500
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=PORT, debug=DEBUG)
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=8000)

@@ -1,38 +1,18 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const enrollmentSchema = new mongoose.Schema(
   {
-    userId: {
+    user: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+    course: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'User',
-      required: true
+      ref: "Course",
+      required: true,
     },
-    courseId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Course',
-      required: true
-    },
-    enrolledAt: {
-      type: Date,
-      default: Date.now
-    },
-    paymentStatus: {
-      type: String,
-      enum: ['pending', 'completed', 'failed', 'free'],
-      default: 'free'
-    },
-    completionStatus: {
-      type: String,
-      enum: ['not_started', 'in_progress', 'completed'],
-      default: 'not_started'
-    }
+    enrolledAt: { type: Date, default: Date.now },
+    completedAt: { type: Date },
+    progress: { type: Number, default: 0, min: 0, max: 100 },
   },
-  {
-    timestamps: true
-  }
+  { timestamps: true },
 );
 
-enrollmentSchema.index({ userId: 1, courseId: 1 }, { unique: true });
-
-const Enrollment = mongoose.model('Enrollment', enrollmentSchema);
-module.exports = Enrollment;
+module.exports = mongoose.model("Enrollment", enrollmentSchema);

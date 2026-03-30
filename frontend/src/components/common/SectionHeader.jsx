@@ -1,13 +1,13 @@
-const SectionHeader = ({ title, subtitle, action }) => {
+export default function SectionHeader({ title, subtitle, action }) {
   return (
-    <div className="mb-6 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+    <div className="flex items-center justify-between mb-8">
       <div>
-        <h2 className="text-2xl font-bold text-slate-900">{title}</h2>
-        {subtitle ? <p className="mt-1 text-sm text-slate-600">{subtitle}</p> : null}
+        <h1 className="text-4xl font-bold text-white tracking-tight">
+          {title}
+        </h1>
+        {subtitle && <p className="text-gray-400 mt-2 text-lg">{subtitle}</p>}
       </div>
-      {action ? <div>{action}</div> : null}
+      {action && <div>{action}</div>}
     </div>
   );
-};
-
-export default SectionHeader;
+}

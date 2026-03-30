@@ -1,24 +1,10 @@
-import DashboardLayout from '../../components/layout/DashboardLayout';
-import CoursesTable from '../../components/admin/CoursesTable';
+import DashboardLayout from "../../components/layout/DashboardLayout";
 
-const ManageCoursesPage = () => {
-  const demoCourses = [
-    {
-      _id: '1',
-      title: 'React for Beginners',
-      category: 'Web Development',
-      instructor: { name: 'Instructor Demo' },
-      price: 0,
-      isPublished: true
-    }
-  ];
-
+export default function ManageCoursesPage() {
   return (
     <DashboardLayout>
-      <h1 className="mb-6 text-3xl font-bold text-slate-900">Manage Courses</h1>
-      <CoursesTable courses={demoCourses} />
+      <h1 className="text-3xl font-bold mb-8">Manage Courses</h1>
+      {/* Add course form / list here */}
     </DashboardLayout>
   );
-};
-
-export default ManageCoursesPage;
+}

@@ -1,23 +1,12 @@
-const express = require('express');
+const express = require("express");
+const router = express.Router();
 const {
   getMyProfile,
   updateMyProfile,
-  getAllUsers,
-  changeUserRole
-} = require('../controllers/user.controller');
+} = require("../controllers/user.controller");
+const auth = require("../middlewares/auth.middleware");
 
-const { protect } = require('../middlewares/auth.middleware');
-const allowRoles = require('../middlewares/role.middleware');
-const validate = require('../middlewares/validate.middleware');
-const { updateProfileSchema, changeRoleSchema } = require('../validations/user.validation');
-
-const router = express.Router();
-
-router.get('/me', protect, getMyProfile);
-router.patch('/me', protect, validate(updateProfileSchema), updateMyProfile);
-
-// admin
-router.get('/', protect, allowRoles('admin'), getAllUsers);
-router.patch('/:userId/role', protect, allowRoles('admin'), validate(changeRoleSchema), changeUserRole);
+router.get("/profile", auth, getMyProfile);
+router.put("/profile", auth, updateMyProfile);
 
 module.exports = router;

@@ -1,42 +1,18 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const certificateSchema = new mongoose.Schema(
   {
-    userId: {
+    user: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+    course: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'User',
-      required: true
-    },
-    courseId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Course',
-      required: true
-    },
-    certificateNumber: {
-      type: String,
+      ref: "Course",
       required: true,
-      unique: true
     },
-    issuedAt: {
-      type: Date,
-      default: Date.now
-    },
-    certificateUrl: {
-      type: String,
-      default: ''
-    },
-    status: {
-      type: String,
-      enum: ['issued', 'revoked'],
-      default: 'issued'
-    }
+    certificateId: { type: String, unique: true, required: true },
+    url: { type: String, required: true }, // Cloudinary PDF URL
+    issuedAt: { type: Date, default: Date.now },
   },
-  {
-    timestamps: true
-  }
+  { timestamps: true },
 );
 
-certificateSchema.index({ userId: 1, courseId: 1 }, { unique: true });
-
-const Certificate = mongoose.model('Certificate', certificateSchema);
-module.exports = Certificate;
+module.exports = mongoose.model("Certificate", certificateSchema);

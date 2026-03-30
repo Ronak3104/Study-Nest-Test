@@ -1,5 +1,2 @@
-const bcrypt = require('bcryptjs');
-
-const hashPassword = async (password) => bcrypt.hash(password, 10);
-
-module.exports = hashPassword;
+// Not used directly anymore (handled in User model pre-save)
+module.exports = {};

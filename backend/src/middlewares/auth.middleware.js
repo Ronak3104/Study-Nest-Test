@@ -1,32 +1,22 @@
-const jwt = require('jsonwebtoken');
-const User = require('../models/user.model.js');
-const env = require('../config/env');
-const asyncHandler = require('../utils/asyncHandler');
-const ApiError = require('../utils/ApiError');
+const jwt = require("jsonwebtoken");
+const ApiError = require("../utils/ApiError");
 
-const protect = asyncHandler(async (req, res, next) => {
-  let token;
+const auth = (req, res, next) => {
+  const authHeader = req.headers.authorization;
 
-  if (
-    req.headers.authorization &&
-    req.headers.authorization.startsWith('Bearer ')
-  ) {
-    token = req.headers.authorization.split(' ')[1];
+  if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    throw new ApiError(401, "Access denied. No token provided.");
   }
 
-  if (!token) {
-    throw new ApiError(401, 'Not authorized, token missing');
+  const token = authHeader.split(" ")[1];
+
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    req.user = decoded; // { id, email, role }
+    next();
+  } catch (error) {
+    throw new ApiError(401, "Invalid or expired token");
   }
+};
 
-  const decoded = jwt.verify(token, env.jwtSecret);
-
-  const user = await User.findById(decoded.id).select('-password');
-  if (!user) {
-    throw new ApiError(401, 'User not found');
-  }
-
-  req.user = user;
-  next();
-});
-
-module.exports = { protect };
+module.exports = auth;

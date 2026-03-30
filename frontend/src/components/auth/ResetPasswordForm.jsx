@@ -1,50 +1,40 @@
-import { useState } from 'react';
-import Input from '../common/Input';
-import Button from '../common/Button';
+import { useState } from "react";
+import Button from "../common/Button";
+import Input from "../common/Input";
+import toast from "react-hot-toast";
 
-const ResetPasswordForm = () => {
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [message, setMessage] = useState('');
+export default function ResetPasswordForm() {
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-
-    if (password !== confirmPassword) {
-      setMessage('Passwords do not match');
-      return;
-    }
-
-    setMessage('Reset password endpoint can be connected once backend is ready.');
+    if (password !== confirmPassword)
+      return toast.error("Passwords don't match");
+    // TODO: Add reset API later
+    toast.success("Password reset successful!");
   };
 
   return (
-    <form className="space-y-5" onSubmit={handleSubmit}>
-      <Input
-        label="New Password"
-        type="password"
-        placeholder="Enter new password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        required
-      />
-
-      <Input
-        label="Confirm Password"
-        type="password"
-        placeholder="Confirm new password"
-        value={confirmPassword}
-        onChange={(e) => setConfirmPassword(e.target.value)}
-        required
-      />
-
-      <Button type="submit" className="w-full">
-        Reset Password
-      </Button>
-
-      {message ? <p className="text-sm text-slate-600">{message}</p> : null}
-    </form>
+    <div className="bg-card p-8 rounded-3xl">
+      <h2 className="text-3xl font-bold mb-8">Reset Password</h2>
+      <form onSubmit={handleSubmit} className="space-y-6">
+        <Input
+          label="New Password"
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
+        <Input
+          label="Confirm Password"
+          type="password"
+          value={confirmPassword}
+          onChange={(e) => setConfirmPassword(e.target.value)}
+        />
+        <Button variant="primary" className="w-full">
+          Reset Password
+        </Button>
+      </form>
+    </div>
   );
-};
-
-export default ResetPasswordForm;
+}

@@ -1,29 +1,17 @@
-import { getYouTubeEmbedUrl } from '../../lib/youtube';
+import { getYoutubeEmbedUrl } from "../../lib/youtube";
 
-const CourseVideoPlayer = ({ youtubeUrl }) => {
-  const embedUrl = getYouTubeEmbedUrl(youtubeUrl);
-
-  if (!embedUrl) {
-    return (
-      <div className="rounded-3xl border border-red-200 bg-red-50 p-6 text-red-700">
-        Invalid YouTube video URL.
-      </div>
-    );
-  }
+export default function CourseVideoPlayer({ youtubeLink }) {
+  const embedUrl = getYoutubeEmbedUrl(youtubeLink);
+  if (!embedUrl) return <p className="text-red-400">Invalid YouTube link</p>;
 
   return (
-    <div className="overflow-hidden rounded-3xl border border-slate-200 bg-black shadow-sm">
-      <div className="aspect-video">
-        <iframe
-          className="h-full w-full"
-          src={embedUrl}
-          title="Course Video"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          allowFullScreen
-        />
-      </div>
+    <div className="aspect-video bg-black rounded-3xl overflow-hidden">
+      <iframe
+        src={embedUrl}
+        title="Course Video"
+        className="w-full h-full"
+        allowFullScreen
+      />
     </div>
   );
-};
-
-export default CourseVideoPlayer;
+}

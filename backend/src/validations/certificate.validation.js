@@ -1,8 +1,12 @@
-const Joi = require('joi');
+const Joi = require("joi");
 
-const issueCertificateSchema = Joi.object({
+const issueCertificate = Joi.object({
+  userId: Joi.string().required(),
   courseId: Joi.string().required(),
-  certificateUrl: Joi.string().allow('').optional()
+  studentName: Joi.string().required(),
+  courseName: Joi.string().required(),
+  duration: Joi.string(),
+  certificateId: Joi.string(),
 });
 
-module.exports = { issueCertificateSchema };
+module.exports = { issueCertificate };

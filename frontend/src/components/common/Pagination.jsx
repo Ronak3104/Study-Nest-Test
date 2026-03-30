@@ -1,27 +1,39 @@
-const Pagination = ({ page = 1, totalPages = 1, onPageChange }) => {
-  if (totalPages <= 1) return null;
+import { ChevronLeft, ChevronRight } from "lucide-react";
+
+export default function Pagination({ currentPage, totalPages, onPageChange }) {
+  const pages = Array.from({ length: totalPages }, (_, i) => i + 1);
 
   return (
-    <div className="flex items-center justify-center gap-2">
+    <div className="flex items-center justify-center gap-2 mt-10">
       <button
-        className="rounded-lg border border-slate-300 px-3 py-2 text-sm"
-        onClick={() => onPageChange(page - 1)}
-        disabled={page === 1}
+        onClick={() => onPageChange(currentPage - 1)}
+        disabled={currentPage === 1}
+        className="w-10 h-10 flex items-center justify-center rounded-2xl bg-card hover:bg-gray-700 disabled:opacity-40 transition"
       >
-        Prev
+        <ChevronLeft size={20} />
       </button>
-      <span className="text-sm text-slate-600">
-        Page {page} of {totalPages}
-      </span>
+
+      {pages.map((page) => (
+        <button
+          key={page}
+          onClick={() => onPageChange(page)}
+          className={`w-10 h-10 rounded-2xl font-semibold transition ${
+            page === currentPage
+              ? "bg-primary text-white"
+              : "bg-card hover:bg-gray-700 text-gray-300"
+          }`}
+        >
+          {page}
+        </button>
+      ))}
+
       <button
-        className="rounded-lg border border-slate-300 px-3 py-2 text-sm"
-        onClick={() => onPageChange(page + 1)}
-        disabled={page === totalPages}
+        onClick={() => onPageChange(currentPage + 1)}
+        disabled={currentPage === totalPages}
+        className="w-10 h-10 flex items-center justify-center rounded-2xl bg-card hover:bg-gray-700 disabled:opacity-40 transition"
       >
-        Next
+        <ChevronRight size={20} />
       </button>
     </div>
   );
-};
-
-export default Pagination;
+}

@@ -1,13 +1,13 @@
-const express = require('express');
-const { getOverview, getDemographics } = require('../controllers/analytics.controller');
-
-const { protect } = require('../middlewares/auth.middleware');
-const allowRoles = require('../middlewares/role.middleware');
-
+const express = require("express");
 const router = express.Router();
+const {
+  dashboardStats,
+  demographics,
+} = require("../controllers/analytics.controller");
+const auth = require("../middlewares/auth.middleware");
+const hasRole = require("../middlewares/role.middleware");
 
-// admin only
-router.get('/overview', protect, allowRoles('admin'), getOverview);
-router.get('/demographics', protect, allowRoles('admin'), getDemographics);
+router.get("/dashboard", auth, hasRole("admin"), dashboardStats);
+router.get("/demographics", auth, hasRole("admin"), demographics);
 
 module.exports = router;

@@ -1,28 +1,18 @@
-const Joi = require('joi');
+const Joi = require("joi");
 
-const createQuizSchema = Joi.object({
-  courseId: Joi.string().required(),
-  title: Joi.string().min(2).max(200).required(),
+const createQuiz = Joi.object({
+  course: Joi.string().required(),
+  title: Joi.string().required(),
   questions: Joi.array()
     .items(
       Joi.object({
-        question: Joi.string().min(2).required(),
-        options: Joi.array().items(Joi.object({ text: Joi.string().required() })).min(2).required(),
-        correctAnswerIndex: Joi.number().min(0).required()
-      })
+        question: Joi.string().required(),
+        options: Joi.array().items(Joi.string()).min(2).required(),
+        correctAnswer: Joi.number().min(0).required(),
+      }),
     )
-    .default([])
+    .min(1)
+    .required(),
 });
 
-const attemptQuizSchema = Joi.object({
-  answers: Joi.array()
-    .items(
-      Joi.object({
-        questionIndex: Joi.number().min(0).required(),
-        selectedAnswerIndex: Joi.number().min(0).required()
-      })
-    )
-    .required()
-});
-
-module.exports = { createQuizSchema, attemptQuizSchema };
+module.exports = { createQuiz };

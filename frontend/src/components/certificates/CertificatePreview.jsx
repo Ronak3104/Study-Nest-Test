@@ -1,17 +1,11 @@
-const CertificatePreview = ({ certificateUrl }) => {
+export default function CertificatePreview({ url }) {
   return (
-    <div className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm">
-      {certificateUrl ? (
-        <iframe
-          src={certificateUrl}
-          title="Certificate Preview"
-          className="h-[600px] w-full"
-        />
-      ) : (
-        <div className="p-10 text-center text-slate-500">No certificate preview available.</div>
-      )}
+    <div className="bg-card rounded-3xl p-4">
+      <iframe
+        src={url}
+        className="w-full aspect-[4/3] rounded-2xl border border-gray-700"
+        title="Certificate Preview"
+      />
     </div>
   );
-};
-
-export default CertificatePreview;
+}

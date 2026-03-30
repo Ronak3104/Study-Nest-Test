@@ -1,26 +1,10 @@
-const ApiError = require('../utils/ApiError');
-
-const extractYouTubeId = (url) => {
-  if (!url) return null;
-
-  // supports: https://www.youtube.com/watch?v=ID, https://youtu.be/ID, https://www.youtube.com/embed/ID
-  const patterns = [
-    /youtube\.com\/watch\?v=([^&]+)/,
-    /youtu\.be\/([^?&]+)/,
-    /youtube\.com\/embed\/([^?&]+)/
-  ];
-
-  for (const p of patterns) {
-    const match = url.match(p);
-    if (match && match[1]) return match[1];
-  }
-  return null;
+const getYoutubeEmbedUrl = (url) => {
+  const regExp =
+    /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+  const match = url.match(regExp);
+  return match && match[2].length === 11
+    ? `https://www.youtube.com/embed/${match[2]}`
+    : null;
 };
 
-const toEmbedUrl = (url) => {
-  const id = extractYouTubeId(url);
-  if (!id) throw new ApiError(400, 'Invalid YouTube URL');
-  return `https://www.youtube.com/embed/${id}`;
-};
-
-module.exports = { extractYouTubeId, toEmbedUrl };
+module.exports = { getYoutubeEmbedUrl };

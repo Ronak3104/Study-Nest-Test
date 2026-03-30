@@ -1,62 +1,44 @@
-import { useState } from 'react';
-import Button from '../common/Button';
-import Textarea from '../common/Textarea';
-import Select from '../common/Select';
+import { useState } from "react";
+import Button from "../common/Button";
+import RatingStars from "./RatingStars";
+import Textarea from "../common/Textarea";
 
-const AddReviewForm = ({ onSubmit, loading = false }) => {
-  const [formData, setFormData] = useState({
-    rating: 5,
-    comment: ''
-  });
-
-  const handleChange = (e) => {
-    setFormData((prev) => ({
-      ...prev,
-      [e.target.name]: e.target.value
-    }));
-  };
+export default function AddReviewForm({ onSubmit }) {
+  const [rating, setRating] = useState(5);
+  const [comment, setComment] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSubmit?.({
-      rating: Number(formData.rating),
-      comment: formData.comment
-    });
+    onSubmit({ rating, comment });
   };
 
   return (
-    <form className="rounded-3xl border border-slate-200 bg-white p-6" onSubmit={handleSubmit}>
-      <h3 className="text-xl font-semibold text-slate-900">Add Your Review</h3>
-
-      <div className="mt-5 space-y-4">
-        <Select
-          label="Rating"
-          name="rating"
-          value={formData.rating}
-          onChange={handleChange}
-          options={[
-            { label: '5 Stars', value: 5 },
-            { label: '4 Stars', value: 4 },
-            { label: '3 Stars', value: 3 },
-            { label: '2 Stars', value: 2 },
-            { label: '1 Star', value: 1 }
-          ]}
-        />
-
-        <Textarea
-          label="Comment"
-          name="comment"
-          value={formData.comment}
-          onChange={handleChange}
-          placeholder="Write your review..."
-        />
-
-        <Button type="submit" disabled={loading}>
-          {loading ? 'Submitting...' : 'Submit Review'}
-        </Button>
+    <form onSubmit={handleSubmit} className="bg-card p-8 rounded-3xl">
+      <h3 className="text-2xl font-semibold mb-6">Leave a Review</h3>
+      <RatingStars rating={rating} />
+      <div className="flex gap-1 mt-2">
+        {[1, 2, 3, 4, 5].map((r) => (
+          <button key={r} type="button" onClick={() => setRating(r)}>
+            <Star
+              size={28}
+              className={
+                r <= rating
+                  ? "fill-yellow-400 text-yellow-400"
+                  : "text-gray-600"
+              }
+            />
+          </button>
+        ))}
       </div>
+      <Textarea
+        label="Your Review"
+        value={comment}
+        onChange={(e) => setComment(e.target.value)}
+        rows={4}
+      />
+      <Button type="submit" className="w-full mt-6">
+        Submit Review
+      </Button>
     </form>
   );
-};
-
-export default AddReviewForm;
+}

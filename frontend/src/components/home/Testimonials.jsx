@@ -1,45 +1,38 @@
-const testimonials = [
-  {
-    name: 'Riya Sharma',
-    role: 'Student',
-    feedback:
-      'StudyNest made learning simple and organized. The dashboard, progress tracking, and certificates feel very professional.'
-  },
-  {
-    name: 'Amit Verma',
-    role: 'Learner',
-    feedback:
-      'I loved the clean course structure and YouTube-based lessons. It was easy to follow and complete assignments.'
-  },
-  {
-    name: 'Sneha Kulkarni',
-    role: 'MCA Student',
-    feedback:
-      'The platform is smooth, modern, and perfect for online learning. Admin and course management features are excellent.'
-  }
-];
+export default function Testimonials() {
+  const testimonials = [
+    {
+      name: 'Sarah Johnson',
+      text: 'StudyNest transformed how I learn. The interactive quizzes and progress tracking are game-changers!',
+      role: 'Software Engineer',
+    },
+    {
+      name: 'Mike Chen',
+      text: 'Best platform for teachers too. Easy to create assignments and track student progress in real-time.',
+      role: 'Math Teacher',
+    },
+    {
+      name: 'Emma Davis',
+      text: 'Earned 3 certificates in a month. The instant certificates look professional and helped my resume.',
+      role: 'Career Switcher',
+    },
+  ];
 
-const Testimonials = () => {
   return (
-    <section className="bg-white py-20">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="mb-10">
-          <h2 className="text-3xl font-bold text-slate-900">What Learners Say</h2>
-          <p className="mt-3 max-w-2xl text-slate-600">
-            Feedback from students who experienced structured and engaging digital learning.
-          </p>
-        </div>
-
-        <div className="grid gap-6 lg:grid-cols-3">
-          {testimonials.map((item) => (
-            <div
-              key={item.name}
-              className="rounded-3xl border border-slate-200 bg-slate-50 p-6 shadow-sm"
-            >
-              <p className="text-slate-700 leading-7">“{item.feedback}”</p>
-              <div className="mt-6">
-                <p className="font-semibold text-slate-900">{item.name}</p>
-                <p className="text-sm text-slate-500">{item.role}</p>
+    <section className="py-24 px-6 bg-gray-50">
+      <div className="max-w-4xl mx-auto text-center">
+        <h2 className="text-4xl font-bold mb-16 text-gray-900">What Students Say</h2>
+        <div className="grid md:grid-cols-3 gap-8">
+          {testimonials.map((testimonial, index) => (
+            <div key={index} className="bg-white p-8 rounded-3xl shadow-lg">
+              <p className="text-gray-600 mb-6 italic">"{testimonial.text}"</p>
+              <div className="flex items-center gap-3">
+                <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
+                  <span className="text-white font-semibold">SJ</span>
+                </div>
+                <div className="text-left">
+                  <h4 className="font-semibold text-gray-900">{testimonial.name}</h4>
+                  <p className="text-gray-500">{testimonial.role}</p>
+                </div>
               </div>
             </div>
           ))}
@@ -47,6 +40,4 @@ const Testimonials = () => {
       </div>
     </section>
   );
-};
-
-export default Testimonials;
+}

@@ -1,17 +1,15 @@
-const ApiError = require('../utils/ApiError');
+const ApiError = require("../utils/ApiError");
 
-const allowRoles = (...roles) => {
+const hasRole = (...allowedRoles) => {
   return (req, res, next) => {
-    if (!req.user) {
-      return next(new ApiError(401, 'Not authorized'));
+    if (!req.user || !allowedRoles.includes(req.user.role)) {
+      throw new ApiError(
+        403,
+        `Access denied. Required role(s): ${allowedRoles.join(", ")}`,
+      );
     }
-
-    if (!roles.includes(req.user.role)) {
-      return next(new ApiError(403, 'Access denied'));
-    }
-
     next();
   };
 };
 
-module.exports = allowRoles;
+module.exports = hasRole;

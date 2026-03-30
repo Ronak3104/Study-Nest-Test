@@ -1,10 +1,7 @@
-const Loader = ({ text = 'Loading...' }) => {
+export default function Loader() {
   return (
-    <div className="flex min-h-[200px] flex-col items-center justify-center gap-3">
-      <div className="h-10 w-10 animate-spin rounded-full border-4 border-slate-200 border-t-brand-600" />
-      <p className="text-sm text-slate-600">{text}</p>
+    <div className="flex justify-center py-8">
+      <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin" />
     </div>
   );
-};
-
-export default Loader;
+}

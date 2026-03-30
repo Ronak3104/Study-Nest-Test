@@ -1,83 +1,73 @@
-import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import Input from '../common/Input';
-import Button from '../common/Button';
-import useAuth from '../../hooks/useAuth';
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { loginUser } from "../../api/authApi";
+import { useAuthStore } from "../../app/store";
+import Button from "../common/Button";
+import Input from "../common/Input";
+import { LogIn } from "lucide-react";
+import toast from "react-hot-toast";
 
-const LoginForm = () => {
+export default function LoginForm() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const { login } = useAuth();
-
-  const [formData, setFormData] = useState({
-    email: '',
-    password: ''
-  });
-  const [error, setError] = useState('');
-  const [submitting, setSubmitting] = useState(false);
-
-  const handleChange = (e) => {
-    setError('');
-    setFormData((prev) => ({
-      ...prev,
-      [e.target.name]: e.target.value
-    }));
-  };
+  const { setUser, setToken } = useAuthStore();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    setLoading(true);
     try {
-      setSubmitting(true);
-      const response = await login(formData);
-      const role = response.data.user.role;
-
-      if (role === 'admin') navigate('/admin/dashboard');
-      else navigate('/student/dashboard');
+      const { data } = await loginUser({ email, password });
+      setToken(data.token);
+      setUser(data.user);
+      toast.success("Welcome back to StudyNest!");
+      navigate("/dashboard");
     } catch (err) {
-      setError(err.response?.data?.message || 'Login failed');
+      toast.error(err.response?.data?.message || "Invalid credentials");
     } finally {
-      setSubmitting(false);
+      setLoading(false);
     }
   };
 
   return (
-    <form className="space-y-5" onSubmit={handleSubmit}>
-      <Input
-        label="Email"
-        type="email"
-        name="email"
-        placeholder="Enter your email"
-        value={formData.email}
-        onChange={handleChange}
-        required
-      />
+    <div className="bg-card p-8 rounded-3xl shadow-2xl">
+      <h2 className="text-3xl font-bold text-center mb-8 text-white">
+        Welcome Back
+      </h2>
+      <form onSubmit={handleSubmit} className="space-y-6">
+        <Input
+          label="Email"
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+        />
+        <Input
+          label="Password"
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+        />
 
-      <Input
-        label="Password"
-        type="password"
-        name="password"
-        placeholder="Enter your password"
-        value={formData.password}
-        onChange={handleChange}
-        required
-      />
+        <Button variant="primary" className="w-full" disabled={loading}>
+          {loading ? (
+            "Signing in..."
+          ) : (
+            <>
+              Sign In <LogIn size={20} />
+            </>
+          )}
+        </Button>
+      </form>
 
-      {error ? <p className="text-sm text-red-600">{error}</p> : null}
-
-      <Button type="submit" className="w-full" disabled={submitting}>
-        {submitting ? 'Signing in...' : 'Sign In'}
-      </Button>
-
-      <div className="flex items-center justify-between text-sm">
-        <Link to="/forgot-password" className="text-brand-600 hover:text-brand-700">
-          Forgot password?
-        </Link>
-        <Link to="/register" className="text-slate-600 hover:text-slate-900">
-          Create account
+      <div className="mt-6 text-center text-gray-400">
+        Don't have an account?{" "}
+        <Link to="/register" className="text-primary hover:underline">
+          Register
         </Link>
       </div>
-    </form>
+    </div>
   );
-};
-
-export default LoginForm;
+}

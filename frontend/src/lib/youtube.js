@@ -1,15 +1,8 @@
-export const getYouTubeVideoId = (url = '') => {
+export const getYoutubeEmbedUrl = (url) => {
   const regExp =
-    /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]{11}).*/;
+    /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
   const match = url.match(regExp);
-  return match ? match[2] : null;
-};
-
-export const getYouTubeEmbedUrl = (url = '') => {
-  const videoId = getYouTubeVideoId(url);
-  return videoId ? `https://www.youtube.com/embed/${videoId}` : '';
-};
-
-export const isValidYouTubeUrl = (url = '') => {
-  return !!getYouTubeVideoId(url);
+  return match && match[2].length === 11
+    ? `https://www.youtube.com/embed/${match[2]}`
+    : null;
 };

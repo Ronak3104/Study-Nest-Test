@@ -1,17 +1,14 @@
-import { HelpCircle } from 'lucide-react';
-import Button from '../common/Button';
-
-const QuizCard = ({ quiz, onStart }) => {
+const QuizCard = ({ quiz }) => {
   return (
-    <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
-      <div className="mb-4 inline-flex rounded-2xl bg-brand-50 p-3 text-brand-700">
-        <HelpCircle size={22} />
+    <div className="bg-card p-6 rounded-3xl hover:shadow-lg transition-all border border-gray-200">
+      <h4 className="font-semibold text-xl mb-2">{quiz.title}</h4>
+      <p className="text-gray-400 line-clamp-2 mb-4">{quiz.description || 'Multiple choice quiz with ' + quiz.questions.length + ' questions'}</p>
+      <div className="flex items-center justify-between text-sm text-gray-500">
+        <span>{quiz.questions.length} questions</span>
+        <span className="font-medium text-emerald-600">
+          Max score: {quiz.maxScore || 100} points
+        </span>
       </div>
-      <h3 className="text-lg font-semibold text-slate-900">{quiz.title}</h3>
-      <p className="mt-2 text-sm text-slate-500">{quiz.questions?.length || 0} questions</p>
-      <Button className="mt-6" onClick={() => onStart?.(quiz)}>
-        Start Quiz
-      </Button>
     </div>
   );
 };

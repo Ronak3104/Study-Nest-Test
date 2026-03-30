@@ -1,44 +1,32 @@
-import Badge from '../common/Badge';
-
-const CertificatesTable = ({ certificates = [] }) => {
+export default function CertificatesTable({ certificates }) {
   return (
-    <div className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm">
-      <div className="border-b border-slate-200 p-6">
-        <h3 className="text-xl font-semibold text-slate-900">Certificates</h3>
-      </div>
-
-      <div className="overflow-x-auto">
-        <table className="min-w-full text-left">
-          <thead className="bg-slate-50 text-sm text-slate-600">
-            <tr>
-              <th className="px-6 py-4">Student</th>
-              <th className="px-6 py-4">Course</th>
-              <th className="px-6 py-4">Certificate No</th>
-              <th className="px-6 py-4">Issued Date</th>
-              <th className="px-6 py-4">Status</th>
+    <div className="bg-card rounded-3xl overflow-hidden">
+      <table className="w-full">
+        <thead>
+          <tr className="border-b border-gray-700">
+            <th className="text-left p-6">Student</th>
+            <th className="text-left p-6">Course</th>
+            <th className="text-left p-6">Issued On</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          {certificates.map((cert) => (
+            <tr key={cert._id} className="border-b border-gray-700">
+              <td className="p-6">{cert.user?.name}</td>
+              <td className="p-6">{cert.course?.title}</td>
+              <td className="p-6 text-gray-400">
+                {new Date(cert.issuedAt).toLocaleDateString()}
+              </td>
+              <td className="p-6">
+                <a href={cert.url} target="_blank" className="text-primary">
+                  View PDF
+                </a>
+              </td>
             </tr>
-          </thead>
-          <tbody>
-            {certificates.map((certificate) => (
-              <tr key={certificate._id} className="border-t border-slate-200 text-sm">
-                <td className="px-6 py-4 font-medium text-slate-900">
-                  {certificate.userId?.name}
-                </td>
-                <td className="px-6 py-4 text-slate-600">{certificate.courseId?.title}</td>
-                <td className="px-6 py-4 text-slate-600">{certificate.certificateNumber}</td>
-                <td className="px-6 py-4 text-slate-600">
-                  {new Date(certificate.issuedAt).toLocaleDateString()}
-                </td>
-                <td className="px-6 py-4">
-                  <Badge variant="success">{certificate.status}</Badge>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
-};
-
-export default CertificatesTable;
+}

@@ -1,29 +1,7 @@
-export const storage = {
-  getToken: () => localStorage.getItem('studynest_token'),
-
-  setToken: (token) => {
-    localStorage.setItem('studynest_token', token);
-  },
-
-  removeToken: () => {
-    localStorage.removeItem('studynest_token');
-  },
-
-  getUser: () => {
-    const user = localStorage.getItem('studynest_user');
-    return user ? JSON.parse(user) : null;
-  },
-
-  setUser: (user) => {
-    localStorage.setItem('studynest_user', JSON.stringify(user));
-  },
-
-  removeUser: () => {
-    localStorage.removeItem('studynest_user');
-  },
-
-  clearAuth: () => {
-    localStorage.removeItem('studynest_token');
-    localStorage.removeItem('studynest_user');
-  }
+export const setItem = (key, value) =>
+  localStorage.setItem(key, JSON.stringify(value));
+export const getItem = (key) => {
+  const item = localStorage.getItem(key);
+  return item ? JSON.parse(item) : null;
 };
+export const removeItem = (key) => localStorage.removeItem(key);

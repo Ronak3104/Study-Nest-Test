@@ -1,11 +1,11 @@
-const Joi = require('joi');
+const Joi = require("joi");
 
-const createAssignmentSchema = Joi.object({
-  courseId: Joi.string().required(),
-  title: Joi.string().min(2).max(200).required(),
-  description: Joi.string().allow('').optional(),
-  dueDate: Joi.date().optional(),
-  fileUrl: Joi.string().allow('').optional()
+const createAssignment = Joi.object({
+  course: Joi.string().required(),
+  title: Joi.string().required(),
+  description: Joi.string(),
+  dueDate: Joi.date(),
+  maxScore: Joi.number().default(100),
 });
 
-module.exports = { createAssignmentSchema };
+module.exports = { createAssignment };

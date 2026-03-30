@@ -1,11 +1,14 @@
-import Button from '../common/Button';
+import { Download } from "lucide-react";
+import Button from "../common/Button";
 
-const DownloadCertificateButton = ({ certificateUrl }) => {
+export default function DownloadCertificateButton({ url, certificateId }) {
   return (
-    <a href={certificateUrl} target="_blank" rel="noreferrer">
-      <Button>Download Certificate</Button>
-    </a>
+    <Button
+      variant="success"
+      onClick={() => window.open(url, "_blank")}
+      className="flex items-center gap-2"
+    >
+      <Download size={18} /> Download Certificate #{certificateId}
+    </Button>
   );
-};
-
-export default DownloadCertificateButton;
+}

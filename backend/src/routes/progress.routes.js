@@ -1,11 +1,12 @@
-const express = require('express');
-const { getMyProgressByCourse, markAssignmentCompleted } = require('../controllers/progress.controller');
-
-const { protect } = require('../middlewares/auth.middleware');
-
+const express = require("express");
 const router = express.Router();
+const {
+  getCourseProgress,
+  updateCourseProgress,
+} = require("../controllers/progress.controller");
+const auth = require("../middlewares/auth.middleware");
 
-router.get('/course/:courseId/me', protect, getMyProgressByCourse);
-router.patch('/course/:courseId/assignment/:assignmentId/complete', protect, markAssignmentCompleted);
+router.get("/course/:courseId", auth, getCourseProgress);
+router.put("/course/:courseId", auth, updateCourseProgress);
 
 module.exports = router;

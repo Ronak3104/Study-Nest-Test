@@ -1,88 +1,60 @@
-const Course = require('../models/Course.model');
-const Lesson = require('../models/Lesson.model');
-const asyncHandler = require('../utils/asyncHandler');
-const ApiResponse = require('../utils/ApiResponse');
-const ApiError = require('../utils/ApiError');
-
-const createCourse = asyncHandler(async (req, res) => {
-  const course = await Course.create({
-    ...req.body,
-    instructor: req.user._id
-  });
-
-  res.status(201).json(new ApiResponse(201, 'Course created successfully', course));
-});
-
-const getAllCourses = asyncHandler(async (req, res) => {
-  const courses = await Course.find()
-    .populate('instructor', 'name email')
-    .sort({ createdAt: -1 });
-
-  res.status(200).json(new ApiResponse(200, 'Courses fetched successfully', courses));
-});
-
-const getCourseById = asyncHandler(async (req, res) => {
-  const course = await Course.findById(req.params.courseId).populate('instructor', 'name email');
-  if (!course) {
-    throw new ApiError(404, 'Course not found');
-  }
-
-  const lessons = await Lesson.find({ courseId: course._id }).sort({ order: 1 });
-
-  res.status(200).json(
-    new ApiResponse(200, 'Course fetched successfully', {
-      course,
-      lessons
-    })
-  );
-});
-
-const updateCourse = asyncHandler(async (req, res) => {
-  const course = await Course.findByIdAndUpdate(req.params.courseId, req.body, {
-    new: true,
-    runValidators: true
-  });
-
-  if (!course) {
-    throw new ApiError(404, 'Course not found');
-  }
-
-  res.status(200).json(new ApiResponse(200, 'Course updated successfully', course));
-});
-
-const deleteCourse = asyncHandler(async (req, res) => {
-  const course = await Course.findByIdAndDelete(req.params.courseId);
-
-  if (!course) {
-    throw new ApiError(404, 'Course not found');
-  }
-
-  await Lesson.deleteMany({ courseId: req.params.courseId });
-
-  res.status(200).json(new ApiResponse(200, 'Course deleted successfully'));
-});
-
-const addLesson = asyncHandler(async (req, res) => {
-  const { courseId } = req.params;
-
-  const course = await Course.findById(courseId);
-  if (!course) {
-    throw new ApiError(404, 'Course not found');
-  }
-
-  const lesson = await Lesson.create({
-    courseId,
-    ...req.body
-  });
-
-  res.status(201).json(new ApiResponse(201, 'Lesson added successfully', lesson));
-});
-
-module.exports = {
+const {
   createCourse,
   getAllCourses,
   getCourseById,
   updateCourse,
   deleteCourse,
-  addLesson
+} = require("../services/course.service");
+
+const addCourse = async (req, res) => {
+  try {
+    const course = await createCourse(req.body, req.user.id);
+    res.status(201).json({ success: true, data: course });
+  } catch (error) {
+    res.status(400).json({ success: false, message: error.message });
+  }
+};
+
+const fetchCourses = async (req, res) => {
+  try {
+    const courses = await getAllCourses(req.query);
+    res.json({ success: true, data: courses });
+  } catch (error) {
+    res.status(400).json({ success: false, message: error.message });
+  }
+};
+
+const fetchCourse = async (req, res) => {
+  try {
+    const course = await getCourseById(req.params.id);
+    res.json({ success: true, data: course });
+  } catch (error) {
+    res.status(404).json({ success: false, message: error.message });
+  }
+};
+
+const editCourse = async (req, res) => {
+  try {
+    const course = await updateCourse(req.params.id, req.body);
+    res.json({ success: true, data: course });
+  } catch (error) {
+    res.status(400).json({ success: false, message: error.message });
+  }
+};
+
+const removeCourse = async (req, res) => {
+  try {
+    await deleteCourse(req.params.id);
+    res.json({ success: true, message: "Course deleted" });
+  } catch (error) {
+    res.status(400).json({ success: false, message: error.message });
+  }
+};
+
+module.exports = {
+  addCourse,
+  fetchCourses,
+  fetchCourse,
+  editCourse,
+  removeCourse,
 };

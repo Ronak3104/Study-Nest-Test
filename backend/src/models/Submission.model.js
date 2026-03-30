@@ -1,41 +1,23 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const submissionSchema = new mongoose.Schema(
   {
-    assignmentId: {
+    assignment: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'Assignment',
-      required: true
+      ref: "Assignment",
+      required: true,
     },
-    userId: {
+    student: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'User',
-      required: true
+      ref: "User",
+      required: true,
     },
-    fileUrl: {
-      type: String,
-      required: true
-    },
-    submittedAt: {
-      type: Date,
-      default: Date.now
-    },
-    marks: {
-      type: Number,
-      default: 0,
-      min: 0
-    },
-    feedback: {
-      type: String,
-      default: ''
-    }
+    fileUrl: { type: String, required: true }, // Cloudinary URL
+    submittedAt: { type: Date, default: Date.now },
+    score: { type: Number },
+    feedback: { type: String },
   },
-  {
-    timestamps: true
-  }
+  { timestamps: true },
 );
 
-submissionSchema.index({ assignmentId: 1, userId: 1 }, { unique: true });
-
-const Submission = mongoose.model('Submission', submissionSchema);
-module.exports = Submission;
+module.exports = mongoose.model("Submission", submissionSchema);

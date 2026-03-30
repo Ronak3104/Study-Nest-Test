@@ -1,29 +1,24 @@
-const multer = require('multer');
-const ApiError = require('../utils/ApiError');
+const multer = require("multer");
+const { cloudinary } = require("../config/cloudinary"); // will be updated later if needed
 
 const storage = multer.memoryStorage();
 
-const fileFilter = (req, file, cb) => {
-  const allowedMimeTypes = [
-    'image/jpeg',
-    'image/png',
-    'image/webp',
-    'application/pdf'
-  ];
-
-  if (allowedMimeTypes.includes(file.mimetype)) {
-    cb(null, true);
-  } else {
-    cb(new ApiError(400, 'Invalid file type. Only JPG, PNG, WEBP, PDF allowed.'), false);
-  }
-};
-
 const upload = multer({
   storage,
-  fileFilter,
-  limits: {
-    fileSize: 10 * 1024 * 1024
-  }
+  limits: { fileSize: 10 * 1024 * 1024 }, // 10MB
+  fileFilter: (req, file, cb) => {
+    if (
+      file.mimetype.startsWith("image/") ||
+      file.mimetype === "application/pdf" ||
+      file.mimetype === "application/msword" ||
+      file.mimetype ===
+        "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    ) {
+      cb(null, true);
+    } else {
+      cb(new Error("Only images, PDFs and Word documents are allowed"), false);
+    }
+  },
 });
 
 module.exports = upload;

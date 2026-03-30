@@ -1,31 +1,36 @@
-const Quiz = require('../models/Quiz.model');
-const QuizAttempt = require('../models/QuizAttempt.model');
-const Progress = require('../models/Progress.model');
-const ApiError = require('../utils/ApiError');
+const Quiz = require("../models/Quiz.model");
+const QuizAttempt = require("../models/QuizAttempt.model");
+const Result = require("../models/Result.model");
 
-const createQuiz = async (data) => Quiz.create(data);
-
-const listByCourse = async (courseId) => Quiz.find({ courseId });
-
-const attempt = async ({ quizId, userId, answers }) => {
-  const quiz = await Quiz.findById(quizId);
-  if (!quiz) throw new ApiError(404, 'Quiz not found');
-
-  let score = 0;
-  quiz.questions.forEach((q, index) => {
-    const ans = answers.find((a) => a.questionIndex === index);
-    if (ans && ans.selectedAnswerIndex === q.correctAnswerIndex) score += 1;
-  });
-
-  const attemptDoc = await QuizAttempt.create({ quizId, userId, answers, score });
-
-  await Progress.findOneAndUpdate(
-    { userId, courseId: quiz.courseId },
-    { $addToSet: { completedQuizzes: quiz._id } },
-    { new: true }
-  );
-
-  return attemptDoc;
+const createQuiz = async (data, instructorId) => {
+  return await Quiz.create(data);
 };
 
-module.exports = { createQuiz, listByCourse, attempt };
+const getQuizzesForCourse = async (courseId) => {
+  return await Quiz.find({ course: courseId });
+};
+
+const submitQuizAttempt = async (studentId, quizId, answers) => {
+  const quiz = await Quiz.findById(quizId);
+  // Simple scoring logic
+  let score = 0;
+  answers.forEach((ans, i) => {
+    if (ans === quiz.questions[i].correctAnswer) score++;
+  });
+  const attempt = await QuizAttempt.create({
+    quiz: quizId,
+    student: studentId,
+    answers,
+    score,
+  });
+  await Result.create({
+    user: studentId,
+    type: "quiz",
+    referenceId: quizId,
+    score,
+    total: quiz.questions.length,
+  });
+  return attempt;
+};
+
+module.exports = { createQuiz, getQuizzesForCourse, submitQuizAttempt };

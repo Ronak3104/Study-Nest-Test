@@ -1,15 +1,20 @@
-const Submission = require('../models/Submission.model');
+const Submission = require("../models/Submission.model");
+const { uploadToCloudinary } = require("./cloudinary.service");
 
-const submit = async ({ assignmentId, userId, fileUrl }) => {
-  return Submission.findOneAndUpdate(
-    { assignmentId, userId },
-    { fileUrl, submittedAt: new Date() },
-    { new: true, upsert: true, runValidators: true }
+const submitAssignment = async (studentId, assignmentId, file) => {
+  const uploaded = await uploadToCloudinary(file);
+  return await Submission.create({
+    assignment: assignmentId,
+    student: studentId,
+    fileUrl: uploaded.secure_url,
+  });
+};
+
+const getSubmissions = async (assignmentId) => {
+  return await Submission.find({ assignment: assignmentId }).populate(
+    "student",
+    "name",
   );
 };
 
-const mySubmissions = async (userId) => {
-  return Submission.find({ userId }).populate('assignmentId').sort({ createdAt: -1 });
-};
-
-module.exports = { submit, mySubmissions };
+module.exports = { submitAssignment, getSubmissions };

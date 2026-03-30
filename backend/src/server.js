@@ -1,19 +1,17 @@
-const app = require('./app');
-const connectDB = require('./config/db');
-const env = require('./config/env');
+const app = require("./app");
+const dotenv = require("dotenv");
 
-const startServer = async () => {
-  try {
-    await connectDB();
+dotenv.config();
 
-    app.listen(env.port, () => {
-      console.log(`Server running on port ${env.port}`);
-      console.log(`Environment: ${env.nodeEnv}`);
-    });
-  } catch (error) {
-    console.error('Server startup failed:', error.message);
-    process.exit(1);
-  }
-};
+const PORT = process.env.PORT || 5000;
 
-startServer();
+const server = app.listen(PORT, () => {
+  console.log(`🚀 Server running on http://localhost:${PORT}`);
+  console.log(`📄 Environment: ${process.env.NODE_ENV || "development"}`);
+});
+
+// Graceful shutdown
+process.on("SIGTERM", () => {
+  console.log("👋 SIGTERM received. Shutting down gracefully...");
+  server.close(() => process.exit(0));
+});

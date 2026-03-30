@@ -1,12 +1,13 @@
-const mongoose = require('mongoose');
-const env = require('./env');
+// src/config/db.js
+const mongoose = require("mongoose");
+const env = require("./env");
 
 const connectDB = async () => {
   try {
-    const conn = await mongoose.connect(env.mongodbUri);
-    console.log(`MongoDB connected: ${conn.connection.host}`);
+    await mongoose.connect(env.MONGO_URI); // ← Clean connection (no old options)
+    console.log("✅ MongoDB Atlas Connected Successfully");
   } catch (error) {
-    console.error('MongoDB connection failed:', error.message);
+    console.error("❌ MongoDB Connection Error:", error.message);
     process.exit(1);
   }
 };

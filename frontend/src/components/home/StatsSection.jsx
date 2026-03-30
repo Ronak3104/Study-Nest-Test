@@ -1,29 +1,26 @@
-import { BookOpen, Award, Users, BarChart3 } from 'lucide-react';
-
-const stats = [
-  { label: 'Courses Available', value: '50+', icon: BookOpen },
-  { label: 'Active Learners', value: '1,200+', icon: Users },
-  { label: 'Certificates Issued', value: '500+', icon: Award },
-  { label: 'Completion Tracking', value: '100%', icon: BarChart3 }
-];
-
-const StatsSection = () => {
+export default function StatsSection() {
   return (
-    <section className="bg-slate-900 py-16 text-white">
-      <div className="mx-auto grid max-w-7xl gap-6 px-4 sm:grid-cols-2 sm:px-6 lg:grid-cols-4 lg:px-8">
-        {stats.map((item) => {
-          const Icon = item.icon;
-          return (
-            <div key={item.label} className="rounded-2xl bg-white/5 p-6">
-              <Icon className="mb-4 text-brand-400" size={24} />
-              <p className="text-3xl font-bold">{item.value}</p>
-              <p className="mt-2 text-sm text-slate-300">{item.label}</p>
-            </div>
-          );
-        })}
+    <section className="py-24 px-6 bg-gradient-to-r from-purple-600 to-blue-600">
+      <div className="max-w-6xl mx-auto text-center text-white">
+        <div className="grid md:grid-cols-4 gap-12 items-center">
+          <div>
+            <div className="text-5xl font-bold mb-4">10K+</div>
+            <div className="text-xl opacity-90">Happy Students</div>
+          </div>
+          <div>
+            <div className="text-5xl font-bold mb-4">500+</div>
+            <div className="text-xl opacity-90">Courses Live</div>
+          </div>
+          <div>
+            <div className="text-5xl font-bold mb-4">50K+</div>
+            <div className="text-xl opacity-90">Assignments Completed</div>
+          </div>
+          <div>
+            <div className="text-5xl font-bold mb-4">4.9⭐</div>
+            <div className="text-xl opacity-90">Average Rating</div>
+          </div>
+        </div>
       </div>
     </section>
   );
-};
-
-export default StatsSection;
+}

@@ -1,13 +1,12 @@
-const express = require('express');
-const { addReview, getCourseReviews } = require('../controllers/review.controller');
-
-const { protect } = require('../middlewares/auth.middleware');
-const validate = require('../middlewares/validate.middleware');
-const { addReviewSchema } = require('../validations/review.validation');
-
+const express = require("express");
 const router = express.Router();
+const {
+  createReview,
+  fetchReviews,
+} = require("../controllers/review.controller");
+const auth = require("../middlewares/auth.middleware");
 
-router.get('/course/:courseId', getCourseReviews);
-router.post('/', protect, validate(addReviewSchema), addReview);
+router.post("/", auth, createReview);
+router.get("/course/:courseId", fetchReviews);
 
 module.exports = router;

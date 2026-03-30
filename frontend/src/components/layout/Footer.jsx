@@ -1,11 +1,9 @@
-const Footer = () => {
+export default function Footer() {
   return (
-    <footer className="mt-16 border-t border-slate-200 bg-white">
-      <div className="mx-auto max-w-7xl px-4 py-8 text-center text-sm text-slate-600 sm:px-6 lg:px-8">
-        © {new Date().getFullYear()} StudyNest. All rights reserved.
+    <footer className="bg-background py-12 border-t border-gray-700">
+      <div className="max-w-7xl mx-auto px-6 text-center text-gray-400">
+        <p>© 2026 StudyNest – Smart Learning, Simplified</p>
       </div>
     </footer>
   );
-};
-
-export default Footer;
+}

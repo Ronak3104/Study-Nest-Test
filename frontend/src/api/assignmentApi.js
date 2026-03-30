@@ -1,21 +1,16 @@
-import axiosInstance from './axiosInstance';
+import axiosInstance from "./axiosInstance";
 
-export const createAssignment = async (payload) => {
-  const { data } = await axiosInstance.post('/assignments', payload);
-  return data;
-};
+export const getCourseAssignments = (courseId) =>
+  axiosInstance.get(`/assignments/course/${courseId}`);
 
-export const getAssignmentsByCourse = async (courseId) => {
-  const { data } = await axiosInstance.get(`/assignments/course/${courseId}`);
-  return data;
-};
+export const createAssignment = (data) =>
+  axiosInstance.post("/assignments", data);
 
-export const getAssignmentById = async (assignmentId) => {
-  const { data } = await axiosInstance.get(`/assignments/${assignmentId}`);
-  return data;
-};
-
-export const submitAssignment = async (assignmentId, payload) => {
-  const { data } = await axiosInstance.post(`/submissions/assignments/${assignmentId}`, payload);
-  return data;
+export const submitAssignment = (data, file) => {
+  const formData = new FormData();
+  formData.append("assignmentId", data.assignmentId);
+  formData.append("file", file);
+  return axiosInstance.post("/submissions", formData, {
+    headers: { "Content-Type": "multipart/form-data" },
+  });
 };

@@ -1,29 +1,29 @@
-import { useEffect, useState } from 'react';
+import { useState, useEffect } from "react";
 
-const QuizTimer = ({ durationInSeconds = 600, onComplete }) => {
-  const [timeLeft, setTimeLeft] = useState(durationInSeconds);
+export default function QuizTimer({ duration, onTimeUp }) {
+  const [timeLeft, setTimeLeft] = useState(duration * 60);
 
   useEffect(() => {
-    if (timeLeft <= 0) {
-      onComplete?.();
-      return;
-    }
-
     const timer = setInterval(() => {
-      setTimeLeft((prev) => prev - 1);
+      setTimeLeft((t) => {
+        if (t <= 1) {
+          clearInterval(timer);
+          onTimeUp();
+          return 0;
+        }
+        return t - 1;
+      });
     }, 1000);
-
     return () => clearInterval(timer);
-  }, [timeLeft, onComplete]);
+  }, [duration, onTimeUp]);
 
   const minutes = Math.floor(timeLeft / 60);
   const seconds = timeLeft % 60;
 
   return (
-    <div className="rounded-2xl bg-slate-900 px-4 py-3 text-sm font-semibold text-white">
-      Time Left: {minutes}:{String(seconds).padStart(2, '0')}
+    <div className="text-2xl font-mono bg-red-500/10 text-red-400 px-6 py-3 rounded-2xl">
+      {minutes}:{seconds < 10 ? "0" : ""}
+      {seconds}
     </div>
   );
-};
-
-export default QuizTimer;
+}

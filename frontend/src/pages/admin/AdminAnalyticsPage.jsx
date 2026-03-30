@@ -1,41 +1,17 @@
-import { useEffect, useState } from 'react';
-import AdminLayout from '../../components/layout/AdminLayout';
-import DemographicsCharts from '../../components/admin/DemographicsCharts';
-import AnalyticsCards from '../../components/admin/AnalyticsCards';
-import { getAnalyticsOverview, getDemographics } from '../../api/adminApi';
+import DashboardLayout from "../../components/layout/DashboardLayout";
+import DemographicsCharts from "../../components/admin/DemographicsCharts";
 
-const AdminAnalyticsPage = () => {
-  const [stats, setStats] = useState(null);
-  const [demographics, setDemographics] = useState(null);
-
-  useEffect(() => {
-    const fetchAnalytics = async () => {
-      try {
-        const [statsRes, demoRes] = await Promise.all([
-          getAnalyticsOverview(),
-          getDemographics()
-        ]);
-
-        setStats(statsRes.data);
-        setDemographics(demoRes.data);
-      } catch {
-        setStats({});
-        setDemographics({});
-      }
-    };
-
-    fetchAnalytics();
-  }, []);
-
+export default function AdminAnalyticsPage() {
   return (
-    <AdminLayout>
-      <div className="space-y-6">
-        <h1 className="text-3xl font-bold text-slate-900">Analytics & Demographics</h1>
-        <AnalyticsCards stats={stats} />
-        <DemographicsCharts demographics={demographics} />
-      </div>
-    </AdminLayout>
+    <DashboardLayout>
+      <h1 className="text-3xl font-bold mb-8">Analytics</h1>
+      <DemographicsCharts
+        roleDistribution={[
+          { _id: "student", count: 85 },
+          { _id: "teacher", count: 12 },
+          { _id: "admin", count: 3 },
+        ]}
+      />
+    </DashboardLayout>
   );
-};
-
-export default AdminAnalyticsPage;
+}

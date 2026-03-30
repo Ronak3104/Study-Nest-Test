@@ -1,11 +1,9 @@
-const buildCertificatePayload = ({ studentName, courseTitle, certificateNumber, issuedAt }) => {
-  return {
-    studentName,
-    courseTitle,
-    certificateNumber,
-    issuedAt: issuedAt || new Date().toISOString(),
-    platform: 'StudyNest'
-  };
-};
+const buildCertificatePayload = (data) => ({
+  studentName: data.studentName,
+  courseName: data.courseName,
+  duration: data.duration || "8 weeks",
+  issueDate: new Date().toLocaleDateString("en-IN"),
+  certificateId: data.certificateId || `CERT-${Date.now()}`,
+});
 
-module.exports = buildCertificatePayload;
+module.exports = { buildCertificatePayload };

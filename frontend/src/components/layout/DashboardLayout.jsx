@@ -1,21 +1,16 @@
-import Navbar from './Navbar';
-import Footer from './Footer';
-import Sidebar from './Sidebar';
-import useAuth from '../../hooks/useAuth';
+import Navbar from "./Navbar";
+import Sidebar from "./Sidebar";
+import Footer from "./Footer";
 
-const DashboardLayout = ({ children }) => {
-  const { user } = useAuth();
-
+export default function DashboardLayout({ children }) {
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="min-h-screen bg-background text-white">
       <Navbar />
       <div className="flex">
-        <Sidebar role={user?.role || 'student'} />
-        <main className="min-h-screen flex-1 px-4 py-8 sm:px-6 lg:px-8">{children}</main>
+        <Sidebar />
+        <main className="flex-1 ml-64 p-8 pb-20">{children}</main>
       </div>
       <Footer />
     </div>
   );
-};
-
-export default DashboardLayout;
+}

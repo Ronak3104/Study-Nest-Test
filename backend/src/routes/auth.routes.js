@@ -1,13 +1,20 @@
-const express = require('express');
-const { register, login, me } = require('../controllers/auth.controller');
-const { protect } = require('../middlewares/auth.middleware');
-const validate = require('../middlewares/validate.middleware');
-const { registerSchema, loginSchema } = require('../validations/auth.validation');
-
+// src/routes/auth.routes.js
+const express = require("express");
 const router = express.Router();
 
-router.post('/register', validate(registerSchema), register);
-router.post('/login', validate(loginSchema), login);
-router.get('/me', protect, me);
+const { register, login } = require("../controllers/auth.controller");
+const asyncHandler = require("../utils/asyncHandler");
+const validate = require("../middlewares/validate.middleware");
+const authValidation = require("../validations/auth.validation");
+const { authLimiter } = require("../middlewares/rateLimit.middleware");
+
+router.post(
+  "/register",
+  authLimiter,
+  validate(authValidation.register),
+  asyncHandler(register)
+);
+
+router.post("/login", authLimiter, validate(authValidation.login), asyncHandler(login));
 
 module.exports = router;

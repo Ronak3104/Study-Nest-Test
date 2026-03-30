@@ -1,45 +1,41 @@
-import { useState } from 'react';
-import Modal from '../common/Modal';
-import Select from '../common/Select';
-import Button from '../common/Button';
+import { useState } from "react";
+import Modal from "../common/Modal";
+import Button from "../common/Button";
+import Select from "../common/Select";
 
-const RoleChangeModal = ({ isOpen, user, onClose, onSubmit, loading = false }) => {
-  const [role, setRole] = useState(user?.role || 'student');
+export default function RoleChangeModal({
+  isOpen,
+  onClose,
+  user,
+  onRoleUpdate,
+}) {
+  const [newRole, setNewRole] = useState(user?.role || "student");
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    onSubmit?.(role);
+  const handleUpdate = () => {
+    onRoleUpdate(user._id, newRole);
+    onClose();
   };
 
   return (
-    <Modal isOpen={isOpen} title="Change User Role" onClose={onClose}>
-      <form onSubmit={handleSubmit} className="space-y-5">
-        <p className="text-sm text-slate-600">
-          Update role for <span className="font-semibold">{user?.name}</span>
+    <Modal isOpen={isOpen} onClose={onClose} title="Change User Role">
+      <div className="space-y-6">
+        <p className="text-gray-400">
+          User: <span className="font-semibold text-white">{user?.name}</span>
         </p>
-
         <Select
-          label="Select Role"
-          value={role}
-          onChange={(e) => setRole(e.target.value)}
+          label="New Role"
           options={[
-            { label: 'Student', value: 'student' },
-            { label: 'Instructor', value: 'instructor' },
-            { label: 'Admin', value: 'admin' }
+            { value: "student", label: "Student" },
+            { value: "teacher", label: "Teacher" },
+            { value: "admin", label: "Admin" },
           ]}
+          value={newRole}
+          onChange={(e) => setNewRole(e.target.value)}
         />
-
-        <div className="flex justify-end gap-3">
-          <Button type="button" variant="secondary" onClick={onClose}>
-            Cancel
-          </Button>
-          <Button type="submit" disabled={loading}>
-            {loading ? 'Updating...' : 'Update Role'}
-          </Button>
-        </div>
-      </form>
+        <Button onClick={handleUpdate} className="w-full">
+          Update Role
+        </Button>
+      </div>
     </Modal>
   );
-};
-
-export default RoleChangeModal;
+}

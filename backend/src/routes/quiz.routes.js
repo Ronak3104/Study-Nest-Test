@@ -1,15 +1,15 @@
-const express = require('express');
-const { createQuiz, getQuizzesByCourse, attemptQuiz } = require('../controllers/quiz.controller');
-
-const { protect } = require('../middlewares/auth.middleware');
-const allowRoles = require('../middlewares/role.middleware');
-const validate = require('../middlewares/validate.middleware');
-const { createQuizSchema, attemptQuizSchema } = require('../validations/quiz.validation');
-
+const express = require("express");
 const router = express.Router();
+const {
+  addQuiz,
+  getCourseQuizzes,
+  attemptQuiz,
+} = require("../controllers/quiz.controller");
+const auth = require("../middlewares/auth.middleware");
+const hasRole = require("../middlewares/role.middleware");
 
-router.post('/', protect, allowRoles('instructor', 'admin'), validate(createQuizSchema), createQuiz);
-router.get('/course/:courseId', protect, getQuizzesByCourse);
-router.post('/:quizId/attempt', protect, validate(attemptQuizSchema), attemptQuiz);
+router.post("/", auth, hasRole("teacher", "admin"), addQuiz);
+router.get("/course/:courseId", auth, getCourseQuizzes);
+router.post("/:quizId/attempt", auth, attemptQuiz);
 
 module.exports = router;

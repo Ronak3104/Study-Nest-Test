@@ -1,24 +1,19 @@
-const User = require('../models/user.model');
-const ApiError = require('../utils/ApiError');
+const User = require("../models/User.model");
+const ApiError = require("../utils/ApiError");
 
-const updateMyProfile = async (userId, updates) => {
-  const user = await User.findByIdAndUpdate(userId, updates, {
+const getProfile = async (userId) => {
+  const user = await User.findById(userId).select("-password");
+  if (!user) throw new ApiError(404, "User not found");
+  return user;
+};
+
+const updateProfile = async (userId, updateData) => {
+  const user = await User.findByIdAndUpdate(userId, updateData, {
     new: true,
-    runValidators: true
-  }).select('-password');
+    runValidators: true,
+  }).select("-password");
+  if (!user) throw new ApiError(404, "User not found");
   return user;
 };
 
-const getAllUsers = async () => {
-  return User.find().select('-password').sort({ createdAt: -1 });
-};
-
-const changeRole = async (userId, role) => {
-  const user = await User.findByIdAndUpdate(userId, { role }, { new: true, runValidators: true })
-    .select('-password');
-
-  if (!user) throw new ApiError(404, 'User not found');
-  return user;
-};
-
-module.exports = { updateMyProfile, getAllUsers, changeRole };
+module.exports = { getProfile, updateProfile };

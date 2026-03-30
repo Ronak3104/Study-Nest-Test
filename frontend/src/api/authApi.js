@@ -1,16 +1,25 @@
-import axiosInstance from './axiosInstance';
+// src/api/authApi.js
+import axiosInstance from "./axiosInstance";
 
-export const registerUser = async (payload) => {
-  const { data } = await axiosInstance.post('/auth/register', payload);
-  return data;
+export const registerUser = async (data) => {
+  try {
+    const response = await axiosInstance.post("/auth/register", data);
+    return response;
+  } catch (error) {
+    console.error(
+      "❌ Register API Error:",
+      error.response?.data || error.message,
+    );
+    throw error; // Important: re-throw so form can catch it
+  }
 };
 
-export const loginUser = async (payload) => {
-  const { data } = await axiosInstance.post('/auth/login', payload);
-  return data;
-};
-
-export const getCurrentUser = async () => {
-  const { data } = await axiosInstance.get('/auth/me');
-  return data;
+export const loginUser = async (data) => {
+  try {
+    const response = await axiosInstance.post("/auth/login", data);
+    return response;
+  } catch (error) {
+    console.error("❌ Login API Error:", error.response?.data || error.message);
+    throw error;
+  }
 };

@@ -1,11 +1,12 @@
-const express = require('express');
-const { markAttendance, getMyAttendanceByCourse } = require('../controllers/attendance.controller');
-
-const { protect } = require('../middlewares/auth.middleware');
-
+const express = require("express");
 const router = express.Router();
+const {
+  mark,
+  getMyAttendance,
+} = require("../controllers/attendance.controller");
+const auth = require("../middlewares/auth.middleware");
 
-router.post('/mark', protect, markAttendance);
-router.get('/course/:courseId/me', protect, getMyAttendanceByCourse);
+router.post("/", auth, mark);
+router.get("/course/:courseId", auth, getMyAttendance);
 
 module.exports = router;

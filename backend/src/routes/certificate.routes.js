@@ -1,17 +1,13 @@
-const express = require('express');
-const { issueCertificate, getMyCertificates, getAllCertificates } = require('../controllers/certificate.controller');
-
-const { protect } = require('../middlewares/auth.middleware');
-const allowRoles = require('../middlewares/role.middleware');
-const validate = require('../middlewares/validate.middleware');
-const { issueCertificateSchema } = require('../validations/certificate.validation');
-
+const express = require("express");
 const router = express.Router();
+const {
+  issueCertificate,
+  getMyCertificates,
+} = require("../controllers/certificate.controller");
+const auth = require("../middlewares/auth.middleware");
+const hasRole = require("../middlewares/role.middleware");
 
-router.get('/me', protect, getMyCertificates);
-router.post('/issue', protect, validate(issueCertificateSchema), issueCertificate);
-
-// admin
-router.get('/', protect, allowRoles('admin'), getAllCertificates);
+router.post("/issue", auth, hasRole("teacher", "admin"), issueCertificate);
+router.get("/my", auth, getMyCertificates);
 
 module.exports = router;

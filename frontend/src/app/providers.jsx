@@ -1,12 +1,21 @@
-import AuthProvider from '../context/AuthContext';
-import ThemeProvider from '../context/ThemeContext';
+// src/app/providers.jsx
+import { Toaster } from "react-hot-toast";
+import { useAuthStore } from "./store";
 
-const Providers = ({ children }) => {
+export default function Providers({ children }) {
   return (
-    <ThemeProvider>
-      <AuthProvider>{children}</AuthProvider>
-    </ThemeProvider>
+    <>
+      {children}
+      <Toaster
+        position="top-right"
+        toastOptions={{
+          style: {
+            background: "#1e2937",
+            color: "#fff",
+            borderRadius: "16px",
+          },
+        }}
+      />
+    </>
   );
-};
-
-export default Providers;
+}

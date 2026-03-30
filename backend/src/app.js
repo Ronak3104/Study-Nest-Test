@@ -1,51 +1,43 @@
-const express = require('express');
-const cors = require('cors');
-const helmet = require('helmet');
-const morgan = require('morgan');
+// src/app.js
+require("./config/env"); // ← Load .env only once at the very top
 
-const corsOptions = require('./config/corsOptions');
-const apiLimiter = require('./middlewares/rateLimit.middleware');
-const errorMiddleware = require('./middlewares/error.middleware');
-const routes = require('./routes');
+const express = require("express");
+const cors = require("cors");
+const helmet = require("helmet");
+const morgan = require("morgan");
+
+const connectDB = require("./config/db");
+const connectCloudinary = require("./config/cloudinary");
+const corsOptions = require("./config/corsOptions");
+const { apiLimiter } = require("./middlewares/rateLimit.middleware");
+const errorHandler = require("./middlewares/error.middleware");
+const routes = require("./routes/index");
 
 const app = express();
 
-// Security middlewares
+// Security & Logging
 app.use(helmet());
-
-// CORS
+app.use(morgan("dev"));
 app.use(cors(corsOptions));
-
-// Logging
-app.use(morgan('dev'));
-
-// Body parsers
-app.use(express.json());
+app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true }));
 
+// Rate limiting
+app.use("/api", apiLimiter);
+
+// Connect Database & Cloudinary
+connectDB();
+connectCloudinary();
+
+// API Routes
+app.use("/api", routes);
+
 // Health check
-app.get('/', (req, res) => {
-  res.status(200).json({
-    success: true,
-    message: 'StudyNest backend is running'
-  });
+app.get("/health", (req, res) => {
+  res.json({ status: "OK", timestamp: new Date().toISOString() });
 });
 
-// API rate limiter
-app.use('/api', apiLimiter);
-
-// API routes
-app.use('/api/v1', routes);
-
-// 404 handler
-app.use((req, res) => {
-  res.status(404).json({
-    success: false,
-    message: 'Route not found'
-  });
-});
-
-// Global error handler
-app.use(errorMiddleware);
+// Error handler (must be last)
+app.use(errorHandler);
 
 module.exports = app;

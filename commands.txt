@@ -1,26 +1,24 @@
-# to intialise backend package.json 
+# intialisation of backend
 npm init -y
 
-# download the required dependencies 
-npm install express mongoose dotenv cors bcryptjs jsonwebtoken multer cloudinary morgan helmet express-rate-limit validator slugify
+# backend dependencies
+npm install express mongoose dotenv cors helmet morgan bcryptjs jsonwebtoken cloudinary multer stripe axios
+npm install --save-dev nodemon
+npm install joi express-rate-limit
 
-# to install nodemon
-npm install -D nodemon
-
-# to install axios 
-npm install axios
-
-# Dependency needed for upload controller
-npm install streamifier
-npm install joi axios
-
-# for frontnend
-npm create vite@latest frontend -- --template react
-cd frontend
+# intialisation of frontend
+npm create vite@latest . -- --template react
 npm install
-npm install axios react-router-dom lucide-react
-npm install -D tailwindcss postcss autoprefixer
-npm install recharts
 
-# for certificate-services
+# frontend dependencies
+npm install lucide-react recharts @stripe/react-stripe-js @stripe/stripe-js axios zustand react-router-dom
+npm install -D tailwindcss postcss autoprefixer
+npx tailwindcss init -p
+npm install react-hot-toast @tailwindcss/postcss
+
+# Python dependencies
 python -m venv venv
+source venv/bin/activate     # On Windows: venv\Scripts\activate
+pip install -r requirements.txt
+
+uvicorn app.generator:app --host 0.0.0.0 --port 8000 --reload

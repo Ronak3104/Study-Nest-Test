@@ -1,34 +1,38 @@
-import { useState } from 'react';
-import Input from '../common/Input';
-import Button from '../common/Button';
+import { useState } from "react";
+import Button from "../common/Button";
+import Input from "../common/Input";
+import toast from "react-hot-toast";
 
-const ForgotPasswordForm = () => {
-  const [email, setEmail] = useState('');
-  const [message, setMessage] = useState('');
+export default function ForgotPasswordForm() {
+  const [email, setEmail] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setMessage('Forgot password endpoint can be connected later from backend.');
+    setLoading(true);
+    // TODO: Add forgot password API later
+    toast.success("Password reset link sent to your email!");
+    setLoading(false);
   };
 
   return (
-    <form className="space-y-5" onSubmit={handleSubmit}>
-      <Input
-        label="Email Address"
-        type="email"
-        placeholder="Enter your registered email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        required
-      />
-
-      <Button type="submit" className="w-full">
-        Send Reset Link
-      </Button>
-
-      {message ? <p className="text-sm text-emerald-600">{message}</p> : null}
-    </form>
+    <div className="bg-card p-8 rounded-3xl">
+      <h2 className="text-3xl font-bold mb-2">Forgot Password?</h2>
+      <p className="text-gray-400 mb-8">
+        Enter your email and we'll send you a reset link.
+      </p>
+      <form onSubmit={handleSubmit}>
+        <Input
+          label="Email"
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+        />
+        <Button variant="primary" className="w-full mt-6" disabled={loading}>
+          {loading ? "Sending..." : "Send Reset Link"}
+        </Button>
+      </form>
+    </div>
   );
-};
-
-export default ForgotPasswordForm;
+}

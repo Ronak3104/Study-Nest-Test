@@ -1,19 +1,10 @@
-import { Navigate, Outlet } from 'react-router-dom';
-import useAuth from '../hooks/useAuth';
-import Loader from '../components/common/Loader';
+import { Navigate, Outlet } from "react-router-dom";
+import { useAuth } from "../hooks/useAuth";
 
-const RoleBasedRoute = ({ allowedRoles = [] }) => {
-  const { user, loading } = useAuth();
-
-  if (loading) {
-    return <Loader text="Checking permissions..." />;
-  }
-
+export default function RoleBasedRoute({ allowedRoles }) {
+  const { user } = useAuth();
   if (!user || !allowedRoles.includes(user.role)) {
-    return <Navigate to="/" replace />;
+    return <Navigate to="/dashboard" replace />;
   }
-
   return <Outlet />;
-};
-
-export default RoleBasedRoute;
+}

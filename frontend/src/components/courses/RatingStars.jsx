@@ -1,18 +1,17 @@
-import { Star } from 'lucide-react';
+import { Star } from "lucide-react";
 
-const RatingStars = ({ rating = 0 }) => {
+export default function RatingStars({ rating }) {
   return (
-    <div className="flex items-center gap-1">
-      {[1, 2, 3, 4, 5].map((value) => (
+    <div className="flex gap-1">
+      {[1, 2, 3, 4, 5].map((star) => (
         <Star
-          key={value}
-          size={16}
-          className={value <= Math.round(rating) ? 'fill-yellow-400 text-yellow-400' : 'text-slate-300'}
+          key={star}
+          size={24}
+          className={
+            star <= rating ? "fill-yellow-400 text-yellow-400" : "text-gray-600"
+          }
         />
       ))}
-      <span className="ml-2 text-sm text-slate-600">{rating.toFixed(1)}</span>
     </div>
   );
-};
-
-export default RatingStars;
+}

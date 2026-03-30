@@ -1,52 +1,23 @@
-const mongoose = require('mongoose');
-
-const optionSchema = new mongoose.Schema(
-  {
-    text: { type: String, required: true }
-  },
-  { _id: false }
-);
-
-const questionSchema = new mongoose.Schema(
-  {
-    question: { type: String, required: true },
-    options: {
-      type: [optionSchema],
-      validate: {
-        validator: function (value) {
-          return value.length >= 2;
-        },
-        message: 'Each question must have at least 2 options'
-      }
-    },
-    correctAnswerIndex: {
-      type: Number,
-      required: true
-    }
-  },
-  { _id: false }
-);
+const mongoose = require("mongoose");
 
 const quizSchema = new mongoose.Schema(
   {
-    courseId: {
+    course: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'Course',
-      required: true
+      ref: "Course",
+      required: true,
     },
-    title: {
-      type: String,
-      required: true
-    },
-    questions: {
-      type: [questionSchema],
-      default: []
-    }
+    title: { type: String, required: true },
+    questions: [
+      {
+        question: String,
+        options: [String],
+        correctAnswer: Number, // index of correct option
+      },
+    ],
+    maxScore: { type: Number, default: 100 },
   },
-  {
-    timestamps: true
-  }
+  { timestamps: true },
 );
 
-const Quiz = mongoose.model('Quiz', quizSchema);
-module.exports = Quiz;
+module.exports = mongoose.model("Quiz", quizSchema);

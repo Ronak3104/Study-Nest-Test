@@ -1,30 +1,19 @@
-const express = require('express');
-const {
-  createCourse,
-  getAllCourses,
-  getCourseById,
-  updateCourse,
-  deleteCourse,
-  addLesson
-} = require('../controllers/course.controller');
-
-const { protect } = require('../middlewares/auth.middleware');
-const allowRoles = require('../middlewares/role.middleware');
-const validate = require('../middlewares/validate.middleware');
-const { createCourseSchema, updateCourseSchema, addLessonSchema } = require('../validations/course.validation');
-
+const express = require("express");
 const router = express.Router();
+const {
+  addCourse,
+  fetchCourses,
+  fetchCourse,
+  editCourse,
+  removeCourse,
+} = require("../controllers/course.controller");
+const auth = require("../middlewares/auth.middleware");
+const hasRole = require("../middlewares/role.middleware");
 
-// public
-router.get('/', getAllCourses);
-router.get('/:courseId', getCourseById);
-
-// instructor/admin
-router.post('/', protect, allowRoles('instructor', 'admin'), validate(createCourseSchema), createCourse);
-router.patch('/:courseId', protect, allowRoles('instructor', 'admin'), validate(updateCourseSchema), updateCourse);
-router.delete('/:courseId', protect, allowRoles('instructor', 'admin'), deleteCourse);
-
-// lessons
-router.post('/:courseId/lessons', protect, allowRoles('instructor', 'admin'), validate(addLessonSchema), addLesson);
+router.get("/", fetchCourses);
+router.get("/:id", fetchCourse);
+router.post("/", auth, hasRole("teacher", "admin"), addCourse);
+router.put("/:id", auth, hasRole("teacher", "admin"), editCourse);
+router.delete("/:id", auth, hasRole("teacher", "admin"), removeCourse);
 
 module.exports = router;

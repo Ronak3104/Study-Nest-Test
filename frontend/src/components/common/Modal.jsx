@@ -1,19 +1,19 @@
-const Modal = ({ isOpen, title, children, onClose }) => {
+export default function Modal({ isOpen, onClose, title, children }) {
   if (!isOpen) return null;
-
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 p-4">
-      <div className="w-full max-w-lg rounded-2xl bg-white p-6 shadow-soft">
-        <div className="mb-4 flex items-center justify-between">
-          <h3 className="text-lg font-semibold text-slate-900">{title}</h3>
-          <button onClick={onClose} className="text-slate-500 hover:text-slate-700">
-            ✕
+    <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50">
+      <div className="bg-card w-full max-w-lg mx-4 rounded-3xl p-8">
+        <div className="flex justify-between items-center mb-6">
+          <h2 className="text-2xl font-bold">{title}</h2>
+          <button
+            onClick={onClose}
+            className="text-3xl leading-none text-gray-400"
+          >
+            ×
           </button>
         </div>
         {children}
       </div>
     </div>
   );
-};
-
-export default Modal;
+}

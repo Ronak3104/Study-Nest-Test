@@ -1,36 +1,14 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const resultSchema = new mongoose.Schema(
   {
-    userId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'User',
-      required: true
-    },
-    courseId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Course',
-      required: true
-    },
-    assignmentScore: {
-      type: Number,
-      default: 0
-    },
-    quizScore: {
-      type: Number,
-      default: 0
-    },
-    totalScore: {
-      type: Number,
-      default: 0
-    }
+    user: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+    type: { type: String, enum: ["quiz", "assignment"], required: true },
+    referenceId: { type: mongoose.Schema.Types.ObjectId, required: true }, // Quiz or Assignment ID
+    score: { type: Number, required: true },
+    total: { type: Number, required: true },
   },
-  {
-    timestamps: true
-  }
+  { timestamps: true },
 );
 
-resultSchema.index({ userId: 1, courseId: 1 }, { unique: true });
-
-const Result = mongoose.model('Result', resultSchema);
-module.exports = Result;
+module.exports = mongoose.model("Result", resultSchema);

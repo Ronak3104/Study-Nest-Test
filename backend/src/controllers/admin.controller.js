@@ -1,45 +1,49 @@
-const User = require('../models/user.model');
-const Course = require('../models/Course.model');
-const Certificate = require('../models/Certificate.model');
-const asyncHandler = require('../utils/asyncHandler');
-const ApiResponse = require('../utils/ApiResponse');
-const ApiError = require('../utils/ApiError');
+const {
+  getAllUsers,
+  changeUserRole,
+  getAllCertificatesAdmin,
+  deleteUser,
+} = require("../services/admin.service");
 
-const getAdminDashboardData = asyncHandler(async (req, res) => {
-  const [users, courses, certificates] = await Promise.all([
-    User.find().select('-password').sort({ createdAt: -1 }).limit(10),
-    Course.find().populate('instructor', 'name email').sort({ createdAt: -1 }).limit(10),
-    Certificate.find()
-      .populate('userId', 'name email')
-      .populate('courseId', 'title')
-      .sort({ createdAt: -1 })
-      .limit(10)
-  ]);
-
-  res.status(200).json(
-    new ApiResponse(200, 'Admin dashboard data fetched successfully', {
-      recentUsers: users,
-      recentCourses: courses,
-      recentCertificates: certificates
-    })
-  );
-});
-
-const toggleUserStatus = asyncHandler(async (req, res) => {
-  const { userId } = req.params;
-
-  const user = await User.findById(userId);
-  if (!user) {
-    throw new ApiError(404, 'User not found');
+const fetchAllUsers = async (req, res) => {
+  try {
+    const users = await getAllUsers();
+    res.json({ success: true, data: users });
+  } catch (error) {
+    res.status(400).json({ success: false, message: error.message });
   }
+};
 
-  user.isActive = !user.isActive;
-  await user.save();
+const updateRole = async (req, res) => {
+  try {
+    const user = await changeUserRole(req.params.userId, req.body.role);
+    res.json({ success: true, message: "Role updated", data: user });
+  } catch (error) {
+    res.status(400).json({ success: false, message: error.message });
+  }
+};
 
-  res.status(200).json(new ApiResponse(200, 'User status updated successfully', user));
-});
+const fetchAllCertificates = async (req, res) => {
+  try {
+    const certs = await getAllCertificatesAdmin();
+    res.json({ success: true, data: certs });
+  } catch (error) {
+    res.status(400).json({ success: false, message: error.message });
+  }
+};
+
+const removeUser = async (req, res) => {
+  try {
+    await deleteUser(req.params.userId);
+    res.json({ success: true, message: "User deleted" });
+  } catch (error) {
+    res.status(400).json({ success: false, message: error.message });
+  }
+};
 
 module.exports = {
-  getAdminDashboardData,
-  toggleUserStatus
+  fetchAllUsers,
+  updateRole,
+  fetchAllCertificates,
+  removeUser,
 };

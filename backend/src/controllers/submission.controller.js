@@ -1,36 +1,28 @@
-const Submission = require('../models/Submission.model');
-const asyncHandler = require('../utils/asyncHandler');
-const ApiResponse = require('../utils/ApiResponse');
-
-const submitAssignment = asyncHandler(async (req, res) => {
-  const submission = await Submission.findOneAndUpdate(
-    {
-      assignmentId: req.params.assignmentId,
-      userId: req.user._id
-    },
-    {
-      fileUrl: req.body.fileUrl,
-      submittedAt: new Date()
-    },
-    {
-      new: true,
-      upsert: true,
-      runValidators: true
-    }
-  );
-
-  res.status(201).json(new ApiResponse(201, 'Assignment submitted successfully', submission));
-});
-
-const getMySubmissions = asyncHandler(async (req, res) => {
-  const submissions = await Submission.find({ userId: req.user._id })
-    .populate('assignmentId')
-    .sort({ createdAt: -1 });
-
-  res.status(200).json(new ApiResponse(200, 'Submissions fetched successfully', submissions));
-});
-
-module.exports = {
+const {
   submitAssignment,
-  getMySubmissions
+  getSubmissions,
+} = require("../services/submission.service");
+
+const submit = async (req, res) => {
+  try {
+    const submission = await submitAssignment(
+      req.user.id,
+      req.body.assignmentId,
+      req.file,
+    );
+    res.status(201).json({ success: true, data: submission });
+  } catch (error) {
+    res.status(400).json({ success: false, message: error.message });
+  }
 };
+
+const getAllSubmissions = async (req, res) => {
+  try {
+    const submissions = await getSubmissions(req.params.assignmentId);
+    res.json({ success: true, data: submissions });
+  } catch (error) {
+    res.status(400).json({ success: false, message: error.message });
+  }
+};
+
+module.exports = { submit, getAllSubmissions };

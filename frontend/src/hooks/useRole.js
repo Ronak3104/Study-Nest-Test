@@ -1,14 +1,10 @@
-import useAuth from './useAuth';
+import { useAuth } from "../context/AuthContext";
 
-const useRole = () => {
+export default function useRole() {
   const { user } = useAuth();
-
   return {
-    role: user?.role || null,
-    isStudent: user?.role === 'student',
-    isInstructor: user?.role === 'instructor',
-    isAdmin: user?.role === 'admin'
+    isAdmin: user?.role === "admin",
+    isTeacher: user?.role === "teacher",
+    isStudent: user?.role === "student",
   };
-};
-
-export default useRole;
+}

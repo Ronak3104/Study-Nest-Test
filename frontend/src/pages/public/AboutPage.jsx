@@ -1,41 +1,20 @@
-import Navbar from '../../components/layout/Navbar';
-import Footer from '../../components/layout/Footer';
+import Navbar from "../../components/layout/Navbar";
+import Footer from "../../components/layout/Footer";
 
-const AboutPage = () => {
+export default function AboutPage() {
   return (
-    <div className="min-h-screen bg-slate-50">
+    <>
       <Navbar />
-      <main className="mx-auto max-w-5xl px-4 py-16 sm:px-6 lg:px-8">
-        <div className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm">
-          <h1 className="text-4xl font-bold text-slate-900">About StudyNest</h1>
-          <p className="mt-6 text-lg leading-8 text-slate-600">
-            StudyNest is a Learning Management System designed to simplify digital learning.
-            It enables students to enroll in courses, access lessons, submit assignments,
-            take quizzes, track their progress, and earn certificates.
-          </p>
-
-          <div className="mt-10 grid gap-6 md:grid-cols-2">
-            <div className="rounded-2xl bg-slate-50 p-6">
-              <h2 className="text-xl font-semibold text-slate-900">Our Mission</h2>
-              <p className="mt-3 text-slate-600">
-                To provide a centralized, user-friendly, and structured learning platform
-                for modern education.
-              </p>
-            </div>
-
-            <div className="rounded-2xl bg-slate-50 p-6">
-              <h2 className="text-xl font-semibold text-slate-900">Our Vision</h2>
-              <p className="mt-3 text-slate-600">
-                To create a scalable and professional LMS that enhances access,
-                engagement, and academic performance.
-              </p>
-            </div>
-          </div>
-        </div>
-      </main>
+      <div className="max-w-4xl mx-auto px-6 py-24">
+        <h1 className="text-5xl font-bold text-center">About StudyNest</h1>
+        <p className="mt-10 text-xl text-gray-300 text-center">
+          A modern Learning Management System built for MCA students at D.Y.
+          Patil University.
+          <br />
+          Smart learning, simplified.
+        </p>
+      </div>
       <Footer />
-    </div>
+    </>
   );
-};
-
-export default AboutPage;
+}

@@ -1,11 +1,12 @@
-const express = require('express');
-const { enrollInCourse, getMyEnrollments } = require('../controllers/enrollment.controller');
-
-const { protect } = require('../middlewares/auth.middleware');
-
+const express = require("express");
 const router = express.Router();
+const {
+  enrollInCourse,
+  myEnrollments,
+} = require("../controllers/enrollment.controller");
+const auth = require("../middlewares/auth.middleware");
 
-router.get('/me', protect, getMyEnrollments);
-router.post('/courses/:courseId/enroll', protect, enrollInCourse);
+router.post("/", auth, enrollInCourse);
+router.get("/my", auth, myEnrollments);
 
 module.exports = router;

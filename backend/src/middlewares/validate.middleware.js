@@ -1,14 +1,24 @@
-const ApiError = require('../utils/ApiError');
+// src/middlewares/validate.middleware.js
+const Joi = require("joi");
+const ApiError = require("../utils/ApiError");
 
 const validate = (schema) => (req, res, next) => {
-  if (!schema) return next();
+  const options = {
+    abortEarly: false,
+    allowUnknown: true,
+    stripUnknown: true,
+  };
 
-  const { error } = schema.validate(req.body, { abortEarly: false });
+  const { error, value } = schema.validate(req.body, options);
 
   if (error) {
-    return next(new ApiError(400, error.details.map((d) => d.message).join(', ')));
+    const errorMessage = error.details
+      .map((detail) => detail.message)
+      .join(", ");
+    return next(new ApiError(400, errorMessage)); // ← This was missing
   }
 
+  req.body = value;
   next();
 };
 

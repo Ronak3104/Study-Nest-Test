@@ -1,12 +1,10 @@
-import AuthLayout from '../../components/layout/AuthLayout';
-import RegisterForm from '../../components/auth/RegisterForm';
+import RegisterForm from "../../components/auth/RegisterForm";
+import AuthLayout from "../../components/layout/AuthLayout";
 
-const RegisterPage = () => {
+export default function RegisterPage() {
   return (
-    <AuthLayout title="Create Your Account" subtitle="Join StudyNest and start learning today">
+    <AuthLayout>
       <RegisterForm />
     </AuthLayout>
   );
-};
-
-export default RegisterPage;
+}

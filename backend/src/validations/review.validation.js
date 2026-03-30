@@ -1,9 +1,9 @@
-const Joi = require('joi');
+const Joi = require("joi");
 
-const addReviewSchema = Joi.object({
-  courseId: Joi.string().required(),
+const createReview = Joi.object({
+  course: Joi.string().required(),
   rating: Joi.number().min(1).max(5).required(),
-  comment: Joi.string().allow('').max(1000).optional()
+  comment: Joi.string().max(500),
 });
 
-module.exports = { addReviewSchema };
+module.exports = { createReview };

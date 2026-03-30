@@ -1,20 +1,24 @@
-import { CalendarCheck2 } from 'lucide-react';
+import { Calendar } from "lucide-react";
 
-const AttendanceCard = ({ totalAttended = 0, totalLessons = 0 }) => {
-  const percentage = totalLessons ? Math.round((totalAttended / totalLessons) * 100) : 0;
+export default function AttendanceCard({ attendanceData = [] }) {
+  const presentCount = attendanceData.filter(
+    (a) => a.status === "present",
+  ).length;
+  const total = attendanceData.length || 1;
+  const percentage = Math.round((presentCount / total) * 100);
 
   return (
-    <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
-      <div className="mb-4 inline-flex rounded-2xl bg-brand-50 p-3 text-brand-700">
-        <CalendarCheck2 size={22} />
+    <div className="bg-card p-6 rounded-3xl">
+      <div className="flex items-center gap-3 mb-4">
+        <Calendar size={24} className="text-success" />
+        <h3 className="font-semibold text-lg">Attendance</h3>
       </div>
-      <h3 className="text-lg font-semibold text-slate-900">Attendance</h3>
-      <p className="mt-2 text-sm text-slate-600">
-        {totalAttended} of {totalLessons} lessons attended
-      </p>
-      <p className="mt-4 text-3xl font-bold text-slate-900">{percentage}%</p>
+      <div className="text-center">
+        <div className="text-6xl font-bold text-success">{percentage}%</div>
+        <p className="text-gray-400 text-sm mt-1">
+          {presentCount} / {total} days present
+        </p>
+      </div>
     </div>
   );
-};
-
-export default AttendanceCard;
+}

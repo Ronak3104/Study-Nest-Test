@@ -1,32 +1,11 @@
-import { useEffect, useState } from 'react';
-import AdminLayout from '../../components/layout/AdminLayout';
-import CertificatesTable from '../../components/admin/CertificatesTable';
-import { getAllCertificates } from '../../api/certificateApi';
+import DashboardLayout from "../../components/layout/DashboardLayout";
+import CertificatesTable from "../../components/admin/CertificatesTable";
 
-const AdminCertificatesPage = () => {
-  const [certificates, setCertificates] = useState([]);
-
-  useEffect(() => {
-    const fetchCertificates = async () => {
-      try {
-        const response = await getAllCertificates();
-        setCertificates(response.data || []);
-      } catch {
-        setCertificates([]);
-      }
-    };
-
-    fetchCertificates();
-  }, []);
-
+export default function AdminCertificatesPage() {
   return (
-    <AdminLayout>
-      <div className="space-y-6">
-        <h1 className="text-3xl font-bold text-slate-900">Issued Certificates</h1>
-        <CertificatesTable certificates={certificates} />
-      </div>
-    </AdminLayout>
+    <DashboardLayout>
+      <h1 className="text-3xl font-bold mb-8">All Certificates</h1>
+      <CertificatesTable certificates={[]} />
+    </DashboardLayout>
   );
-};
-
-export default AdminCertificatesPage;
+}

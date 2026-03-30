@@ -1,30 +1,13 @@
-import Button from '../common/Button';
-import RatingStars from './RatingStars';
+import Button from "../common/Button";
 
-const EnrollmentCard = ({ course, onEnroll, enrolled = false, loading = false }) => {
+export default function EnrollmentCard({ course, onEnroll }) {
   return (
-    <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm">
-      <p className="text-sm text-slate-500">Instructor</p>
-      <p className="mt-1 text-lg font-semibold text-slate-900">
-        {course?.instructor?.name || 'Unknown'}
-      </p>
-
-      <div className="mt-4">
-        <RatingStars rating={course?.averageRating || 0} />
-      </div>
-
-      <div className="mt-6 border-t border-slate-200 pt-6">
-        <p className="text-3xl font-bold text-slate-900">
-          {course?.price === 0 ? 'Free' : `₹${course?.price}`}
-        </p>
-        <p className="mt-2 text-sm text-slate-500">{course?.duration || 'N/A'} duration</p>
-      </div>
-
-      <Button className="mt-6 w-full" onClick={onEnroll} disabled={loading || enrolled}>
-        {enrolled ? 'Already Enrolled' : loading ? 'Processing...' : 'Enroll Now'}
+    <div className="bg-card p-8 rounded-3xl text-center">
+      <h3 className="text-3xl font-bold">Enroll Now</h3>
+      <p className="text-5xl font-semibold mt-4">₹{course.price || "Free"}</p>
+      <Button onClick={onEnroll} className="mt-8 w-full text-xl py-6">
+        Enroll in Course
       </Button>
     </div>
   );
-};
-
-export default EnrollmentCard;
+}

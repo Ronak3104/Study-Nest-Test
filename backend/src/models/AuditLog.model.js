@@ -1,32 +1,14 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const auditLogSchema = new mongoose.Schema(
   {
-    action: {
-      type: String,
-      required: true
-    },
-    performedBy: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'User'
-    },
-    targetType: {
-      type: String,
-      default: ''
-    },
-    targetId: {
-      type: String,
-      default: ''
-    },
-    metadata: {
-      type: Object,
-      default: {}
-    }
+    action: { type: String, required: true },
+    performedBy: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+    target: { type: String }, // e.g., "User", "Course"
+    targetId: { type: mongoose.Schema.Types.ObjectId },
+    details: { type: Object },
   },
-  {
-    timestamps: true
-  }
+  { timestamps: true },
 );
 
-const AuditLog = mongoose.model('AuditLog', auditLogSchema);
-module.exports = AuditLog;
+module.exports = mongoose.model("AuditLog", auditLogSchema);
