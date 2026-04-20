@@ -1,0 +1,13 @@
+# for initializing frontend 
+npm create vite@latest
+npm install
+npm install tailwindcss @tailwindcss/vite
+npm i react-router-dom
+npm install lucide-react@next
+npm install @clerk/react
+npm i react-toastify
+npm i @lottiefiles/dotlottie-react
+
+# for initializing backend and installing dependecies
+npm init
+npm i bcryptjs body-parser cors dotenv express mongoose multer nodemon stripe uuid validator
