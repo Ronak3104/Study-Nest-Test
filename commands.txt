@@ -29,3 +29,4 @@ npm install @clerk/clerk-react
 npm install lucide-react
 npm i react-toastify
 npm i react-hot-toast
+npm i axios
